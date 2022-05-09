@@ -1,3 +1,4 @@
+import AuthLayout from 'layout/AuthLayout'
 import UnauthLayout from 'layout/UnauthLayout'
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
@@ -8,7 +9,7 @@ function index() {
       <Route path='/*' element={
         <UnauthLayout />
       }/>
-      <Route path='auth' element={<UnauthLayout />} />
+      <Route path='auth' element={<AuthLayout />} />
     </Routes>
   )
 }

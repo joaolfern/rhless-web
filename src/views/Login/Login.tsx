@@ -14,7 +14,7 @@ function Login() {
       <img
         src={logo}
       />
-      <div className='flex flex-col items-center max-w-sm gap-4 '>
+      <div className='flex flex-col items-center w-full max-w-sm gap-4'>
         <Input className='w-full' placeholder='Informe seu email' />
         <Input className='w-full' placeholder='Informe sua senha' />
         <ButtonPrimary className='w-full p-3'>

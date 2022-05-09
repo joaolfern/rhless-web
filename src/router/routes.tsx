@@ -12,6 +12,11 @@ const routes = {
       path:  paths.unauth.restorePassword,
       element: <Login />
     }
+  },
+  auth: {
+    home: {
+      path: paths.auth.home
+    }
   }
 }
 
