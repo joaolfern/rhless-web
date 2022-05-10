@@ -1,6 +1,6 @@
 import React from 'react'
 
-function useUser() {
+function useUser () {
   return {
     _id: '12345676',
     name: 'Edson Ramalho',

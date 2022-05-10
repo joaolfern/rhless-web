@@ -5,7 +5,7 @@ type IButonPrimary = {
 
 } & IButton
 
-function ButtonPrimary({ className, ...rest }: IButonPrimary) {
+function ButtonPrimary ({ className, ...rest }: IButonPrimary) {
   return (
     <Button
       className={`bg-primary ${className || ''}`}

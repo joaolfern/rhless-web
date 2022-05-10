@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import routes from 'router/routes'
 
-function SideBar() {
+function SideBar () {
   return (
     <aside
       className='h-full border-r-2 border-light-text w-80'

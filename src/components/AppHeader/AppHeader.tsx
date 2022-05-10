@@ -3,7 +3,7 @@ import logo from 'assets/logo.jpg'
 import useUser from 'hooks/useUser'
 import Avatar from 'components/Avatar/Avatar'
 
-function AppHeader() {
+function AppHeader () {
   const user = useUser()
 
   return (

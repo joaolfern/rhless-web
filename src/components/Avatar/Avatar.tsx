@@ -4,7 +4,7 @@ type IProps = {
 
 } & DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>
 
-function Avatar({ className, ...rest }: IProps) {
+function Avatar ({ className, ...rest }: IProps) {
   return (
     <img
       className={`${className || ''} h-16 w-16 rounded-full`}

@@ -1,39 +1,48 @@
 {
   "env": {
-    "browser": true,
-    "es2021": true,
-    "jest": true
+      "browser": true,
+      "es2021": true
   },
   "extends": [
-    "plugin:react/recommended"
+      "plugin:cypress/recommended",
+      "plugin:react/recommended",
+      "standard"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaFeatures": {
-        "jsx": true
-    },
-    "ecmaVersion": 12,
-    "sourceType": "module"
+      "ecmaFeatures": {
+          "jsx": true
+      },
+      "ecmaVersion": 12,
+      "sourceType": "module"
   },
   "plugins": [
-    "react",
-    "@typescript-eslint",
-    "only-warn"
+      "react",
+      "react-hooks",
+      "@typescript-eslint",
+      "only-warn",
+      "cypress"
   ],
   "rules": {
-    "react-hooks/exhaustive-deps": "off",
-    "react-hooks/rules-of-hooks": "warn",
-    "@typescript-eslint/ban-ts-comment": "off",
-    "react/display-name": "off",
-    "no-case-declarations": "warn",
-    "no-use-before-define": [0],
-    "@typescript-eslint/no-use-before-define": [1],
-    "no-unused-vars": [0],
-    "@typescript-eslint/no-unused-vars": [1],
-    "no-nested-ternary": "off",
-    "no-unneeded-ternary": "off",
-    "multiline-ternary": "off",
-    "react/prop-types": "off"
+      "react-hooks/exhaustive-deps": "off",
+      "@typescript-eslint/ban-ts-comment": "off",
+      "react/display-name": "off",
+      "no-case-declarations": "warn",
+      "no-use-before-define": [0],
+      "@typescript-eslint/no-use-before-define": [1],
+      "no-nested-ternary": "off",
+      "no-unneeded-ternary": "off",
+      "multiline-ternary": "off",
+      "camelcase": "off",
+      "cypress/no-assigning-return-values": "error",
+      "cypress/no-unnecessary-waiting": "error",
+      "cypress/assertion-before-screenshot": "warn",
+      "cypress/no-force": "warn",
+      "cypress/no-async-tests": "error",
+      "allowTernary": 0,
+      "allowShortCircuit": 0
   },
-  "globals": {}
+  "globals": {
+
+  }
 }

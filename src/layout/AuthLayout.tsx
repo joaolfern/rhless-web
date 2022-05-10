@@ -4,7 +4,7 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import routes from 'router/routes'
 
-function AuthLayout() {
+function AuthLayout () {
   return (
     <div className='h-100'>
       <AppHeader />

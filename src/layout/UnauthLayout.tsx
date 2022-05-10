@@ -2,7 +2,7 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import routes from 'router/routes'
 
-function UnauthLayout() {
+function UnauthLayout () {
   return (
     <div className='h-full'>
       <Routes>

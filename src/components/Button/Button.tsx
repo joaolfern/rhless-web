@@ -1,10 +1,10 @@
 import React, { ButtonHTMLAttributes, DetailedHTMLProps } from 'react'
 
-export type IButton =  {
+export type IButton = {
 
-} & DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>,HTMLButtonElement>
+} & DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
 
-function Button({
+function Button ({
   className,
   ...rest
 }: IButton) {

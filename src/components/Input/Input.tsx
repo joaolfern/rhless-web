@@ -4,7 +4,7 @@ type IInput = {
   forwardedRef?: React.Ref<HTMLInputElement>
 } & DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
 
-function Input({ className, forwardedRef, ...rest }: IInput) {
+function Input ({ className, forwardedRef, ...rest }: IInput) {
   return (
     <input
       ref={forwardedRef}

@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form'
 import { ILoginForm } from 'views/Login/type'
 import { useNavigate } from 'react-router-dom'
 
-function Login() {
+function Login () {
   const { handleSubmit, register } = useForm<ILoginForm>()
 
   const navigate = useNavigate()
@@ -18,8 +18,8 @@ function Login() {
     console.log(values)
     navigate(`/auth${paths.auth.home}`)
   }
-  const { ref: emailRef,  ...emailRegister} = register('email')
-  const { ref: passwordRef,  ...passwordRegister} = register('password')
+  const { ref: emailRef, ...emailRegister } = register('email')
+  const { ref: passwordRef, ...passwordRegister } = register('password')
 
   return (
     <form
