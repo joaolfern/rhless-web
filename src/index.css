@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "nunito";
+  src: url("../public/fonts/Nunito-Regular.ttf") format('truetype');
+}
+
+@font-face {
+  font-family: "nunito";
+  src: url("../public/fonts/Nunito-Bold.ttf") format('truetype');
+font-weight: bold;
+}
+
 html, body, #root {
   height: 100%;
 }

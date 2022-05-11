@@ -16,7 +16,7 @@ function Login () {
 
   function onSubmit (values: ILoginForm) {
     console.log(values)
-    navigate(`/auth${paths.auth.home}`)
+    navigate(`auth${paths.auth.home}`)
   }
   const { ref: emailRef, ...emailRegister } = register('email')
   const { ref: passwordRef, ...passwordRegister } = register('password')

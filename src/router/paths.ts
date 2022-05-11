@@ -4,7 +4,10 @@ const paths = {
     restorePassword: '/restore-password'
   },
   auth: {
-    home: '/'
+    home: '/home',
+    users: '/users',
+    jobs: '/jobs',
+    resumes: '/resumes'
   }
 }
 

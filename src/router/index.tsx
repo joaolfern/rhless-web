@@ -3,13 +3,13 @@ import UnauthLayout from 'layout/UnauthLayout'
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 
-function index() {
+function index () {
   return (
     <Routes>
       <Route path='/*' element={
         <UnauthLayout />
       }/>
-      <Route path='auth' element={<AuthLayout />} />
+      <Route path='auth/*' element={<AuthLayout />} />
     </Routes>
   )
 }
