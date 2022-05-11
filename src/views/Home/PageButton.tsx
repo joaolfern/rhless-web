@@ -10,7 +10,7 @@ function PageButton ({ routeConfig }: IPageButton) {
   return (
     <Link
       className='flex '
-      to={routeConfig.path.replace('/', '')}
+      to={`/auth${routeConfig.path}`}
     >
       <img
         className='block'

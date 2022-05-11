@@ -1,7 +1,7 @@
+import React from 'react'
 import AppHeader from 'components/AppHeader/AppHeader'
 import SideBar from 'components/SideBar/SideBar'
 import { AuthLayoutContextProvider } from 'context/AuthLayoutContext'
-import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import routes from 'router/routes'
 
