@@ -3,20 +3,20 @@ import routes from 'router/routes'
 import PageButton from 'views/Home/PageButton'
 
 function Home () {
+  // TODO 🎈 grid auto-fit
   return (
     <section>
       <h1 className='font-bold text-light-text'>INÍCIO</h1>
-      <ul className='grid '>
+      <div className='grid grid-rows-3 gap-4 md:grid-cols-3'>
         {Object.entries(routes.auth)
           .filter(([routeName, routeConfig]) => routeConfig.inHome)
           .map(([routeName, routeConfig]) => (
-            <li key={routeConfig.path}>
               <PageButton
+                key={routeName}
                 routeConfig={routeConfig}
               />
-            </li>
           ))}
-      </ul>
+      </div>
     </section>
   )
 }
