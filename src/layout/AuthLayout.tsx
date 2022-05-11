@@ -12,7 +12,7 @@ function AuthLayout () {
         <AppHeader />
         <div className='relative flex grow'>
           <SideBar />
-          <main className='w-full grow bg-dark-background'>
+          <main className='w-full p-4 grow bg-dark-background'>
             {<Routes>
               {Object.values(routes.auth).map(route => (
                 <Route key={route.path} {...route} />

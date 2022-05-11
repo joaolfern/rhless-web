@@ -11,11 +11,17 @@ import Users from 'views/Users/Users'
 import Jobs from 'views/Jobs/Jobs'
 import Resumes from 'views/Resumes/Resumes'
 
+import jobsPageButton from 'assets/pageButton/jobs.png'
+import resumesPageButton from 'assets/pageButton/resumes.png'
+import usersPageButton from 'assets/pageButton/users.png'
+
 export type IRouteConfig = {
   path: string
   label: string
   element: ReactNode
   icon: ReactNode
+  pageButtonImage?: string
+  inHome?: true
 }
 
 type IRoutes = {
@@ -50,19 +56,26 @@ const routes: IRoutes = {
       label: 'Usuários',
       path: paths.auth.users,
       element: <Users />,
-      icon: <HiUser />
+      icon: <HiUser />,
+      pageButtonImage: usersPageButton,
+      inHome: true
     },
     jobs: {
       label: 'Vagas',
       path: paths.auth.jobs,
       element: <Jobs />,
-      icon: <MdWork />
+      icon: <MdWork />,
+      pageButtonImage: jobsPageButton,
+      inHome: true
+
     },
     resumes: {
       label: 'Currículos',
       path: paths.auth.resumes,
       element: <Resumes />,
-      icon: <HiDocumentText />
+      icon: <HiDocumentText />,
+      pageButtonImage: resumesPageButton,
+      inHome: true
     }
   }
 }
