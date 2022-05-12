@@ -12,7 +12,7 @@ function AuthLayout () {
         <AppHeader />
         <div className='relative flex overflow-hidden grow'>
           <SideBar />
-          <main className='w-full p-4 grow bg-dark-background'>
+          <main className='flex flex-col w-full p-4 grow bg-dark-background'>
 
             {<Routes>
               {Object.values(routes.auth).map(route => (
@@ -22,7 +22,9 @@ function AuthLayout () {
                   element={
                     <>
                       <h1 className='text-xl font-bold uppercase text-light-text'>{route.label}</h1>
-                      {route.element}
+                      <div className='flex flex-col overflow-hidden grow'>
+                        {route.element}
+                      </div>
                     </>
                   }
                   />
