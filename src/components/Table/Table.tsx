@@ -16,7 +16,7 @@ function Table ({ data, columns, loading, ...pagination }: ITable) {
     <div className='flex flex-col'>
       <table
         {...getTableProps()}
-        className=' bg-background'
+        className='text-left bg-background'
       >
         <thead>
           {headerGroups.map(headerGroup => {

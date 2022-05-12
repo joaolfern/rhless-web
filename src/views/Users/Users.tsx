@@ -7,15 +7,20 @@ import UserRepository from 'Repository/users'
 import { IUser, IUsersListRequest, IUsersListRequestParams, IUsersListResponse } from 'types/Users'
 import { IRequestSearchable } from 'Repository/type'
 import { useForm } from 'react-hook-form'
+import Tag from 'components/Tag/Tag'
+import { translateStatus } from 'views/Users/constants'
+import TagButton from 'components/TagButton/TagButton'
 
 const columns: Column<IUser>[] = [
   {
     accessor: 'picture',
     Cell: (cell) => (
-      <img
-        className='box-content w-10 h-10 p-2 rounded-full min-w-10 min-h-10 md:w-14 md:h-14 md:min-w-14 md:min-h-14'
-        src={cell.value}
-      />
+      <div className='flex gap-2'>
+        <img
+          className='box-content w-10 h-10 p-2 rounded-full min-w-10 min-h-10 md:w-14 md:h-14 md:min-w-14 md:min-h-14'
+          src={cell.value}
+        />
+      </div>
     )
   },
   {
@@ -25,7 +30,21 @@ const columns: Column<IUser>[] = [
 
   {
     Header: 'Status',
-    accessor: 'status'
+    accessor: 'status',
+    Cell: (cell) => (
+      <div className='grid gap-2 grid-cols-[100px_60px]'>
+        <Tag
+          type='secondary'
+        >
+          {translateStatus[cell.value]}
+        </Tag>
+        <TagButton
+          type='ghost'
+        >
+          Editar
+        </TagButton>
+      </div>
+    )
   }
 ]
 

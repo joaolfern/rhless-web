@@ -1,6 +1,6 @@
 import { IRequest, IRequestPaginated, IRequestSearchable, IResponsePaginated } from 'Repository/type'
 
-type _userStatus = 'active' | 'inactive'
+export type _userStatus = 'active' | 'inactive'
 
 export type IUser = {
   _id: string
