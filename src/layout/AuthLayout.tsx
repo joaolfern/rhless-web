@@ -29,7 +29,7 @@ function AuthLayout () {
                       element={
                         <>
                           <h1 className='text-xl font-bold uppercase text-light-text'>{route.label}</h1>
-                          <div className='flex flex-col overflow-hidden grow'>
+                          <div className='flex flex-col overflow-x-hidden overflow-y-auto grow'>
                             {route.element}
                           </div>
                         </>
