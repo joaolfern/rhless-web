@@ -4,9 +4,13 @@ import { BrowserRouter } from 'react-router-dom'
 
 function App () {
   return (
-    <BrowserRouter>
-      <Router />
-    </BrowserRouter>
+    <>
+      <BrowserRouter>
+        <Router />
+      </BrowserRouter>
+      <div id='modal-portal'></div>
+    </>
+
   )
 }
 

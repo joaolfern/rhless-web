@@ -1,6 +1,6 @@
 import React, { DetailedHTMLProps } from 'react'
 
-type IInput = {
+export type IInput = {
   forwardedRef?: React.Ref<HTMLInputElement>
 } & DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
 

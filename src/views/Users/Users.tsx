@@ -10,6 +10,9 @@ import { useForm } from 'react-hook-form'
 import Tag from 'components/Tag/Tag'
 import { translateStatus } from 'views/Users/constants'
 import TagButton from 'components/TagButton/TagButton'
+import UserForm from 'components/UserForm/UserForm'
+import { useModalContext } from 'hooks/useModalContext'
+import InputSm from 'components/Input/InputSm'
 
 const columns: Column<IUser>[] = [
   {
@@ -165,8 +168,13 @@ function Users () {
   const [docs, setDocs] = useState<IUser[]>([])
   const [loadingDocs, setLoadingDocs] = useState(false)
 
+  const [showForm, setShowForm] = useState(false)
+  const { updateShowModal } = useModalContext()
+
   const scrollRef = useRef<HTMLDivElement>(null)
   const cachedParams = useRef<IUsersListRequestParams>({ page: 1, limit })
+
+  const [focusedUser, setFocusedUser] = useState<IUser | null>(null)
 
   const { handleSubmit: handleSearch, register } = useForm<IRequestSearchable>()
   const { ref: searchRef, ...searchRegister } = register('search')
@@ -209,11 +217,35 @@ function Users () {
     console.log('search', values)
   }
 
+  function editUser () {
+
+  }
+
+  function createUser () {
+    setShowForm(true)
+    updateShowModal(true)
+  }
+
+  function onCancelForm () {
+    setFocusedUser(null)
+  }
+
+  function onSubmitForm () {
+    getDocs({ ...cachedParams.current, page: 1 })
+    updateShowModal(false)
+  }
+
   return (
     <div
       className='flex flex-col overflow-auto grow'
       ref={scrollRef}
     >
+      {showForm && (
+        <UserForm
+          onSubmitForm={onSubmitForm}
+          onCancelForm={onCancelForm}
+        />
+      )}
       <TableFilterable
         data={docs}
         columns={columns}
@@ -227,15 +259,14 @@ function Users () {
             <form
               onSubmit={handleSearch(onSearch)}
             >
-              <Input
-                className='p-2'
+              <InputSm
                 placeholder='Buscar'
                 forwardedRef={searchRef}
                 {...searchRegister}
               />
             </form>
 
-            <ButtonPrimary className='p-2'>
+            <ButtonPrimary onClick={createUser} className='p-2'>
               Cadastrar Usuário
             </ButtonPrimary>
           </div>
