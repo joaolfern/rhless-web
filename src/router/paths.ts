@@ -7,7 +7,7 @@ const paths = {
     home: '/home',
     users: '/users',
     jobs: '/jobs',
-    resumes: '/resumes'
+    candidates: '/candidates'
   }
 }
 

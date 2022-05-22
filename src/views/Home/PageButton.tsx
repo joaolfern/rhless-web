@@ -15,6 +15,7 @@ function PageButton ({ routeConfig }: IPageButton) {
       <img
         className='block rounded-tl-xl rounded-tr-xl'
         src={routeConfig.pageButtonImage}
+        draggable={false}
       />
       <div className='flex items-center justify-center gap-2 p-4 text-xl font-bold cursor-pointer'>
         <span className='flex justify-center w-5'>

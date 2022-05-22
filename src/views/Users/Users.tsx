@@ -3,123 +3,16 @@ import ButtonPrimary from 'components/Button/Variants/ButtonPrimary'
 import TableFilterable from 'components/TableFilterable/TableFilterable'
 import { Column } from 'react-table'
 import UserRepository from 'Repository/users'
-import { IUser, IUsersListRequest, IUsersListRequestParams, IUsersListResponse, _userStatus } from 'types/Users'
+import { IUser, IUsersListRequest, IUsersListRequestParams, IUsersListResponse, _userStatus, _userType } from 'types/Users'
 import { IRequestSearchable } from 'Repository/type'
 import { useForm } from 'react-hook-form'
 import Tag from 'components/Tag/Tag'
-import { translateStatus } from 'views/Users/constants'
+import { translateStatus, translateType } from 'views/Users/constants'
 import TagButton from 'components/TagButton/TagButton'
 import UserForm from 'components/UserForm/UserForm'
 import { useModalContext } from 'hooks/useModalContext'
 import InputSm from 'components/Input/InputSm'
-
-const mockedData: IUser[] = [
-  {
-    _id: '1',
-    email: 'joao@yopmail.com',
-    name: 'Joào',
-    picture: 'https://avatars2.githubusercontent.com/u/1234?s=460&v=4',
-    status: 'active'
-  },
-  {
-    _id: '2',
-    email: 'joao@yopmail.com',
-    name: 'Joào',
-    picture: 'https://avatars2.githubusercontent.com/u/1234?s=460&v=4',
-    status: 'active'
-  },
-  {
-    _id: '3',
-    email: 'joao@yopmail.com',
-    name: 'Joào',
-    picture: 'https://avatars2.githubusercontent.com/u/1234?s=460&v=4',
-    status: 'active'
-  },
-  {
-    _id: '4',
-    email: 'joao@yopmail.com',
-    name: 'Joào',
-    picture: 'https://avatars2.githubusercontent.com/u/1234?s=460&v=4',
-    status: 'active'
-  },
-  {
-    _id: '5',
-    email: 'joao@yopmail.com',
-    name: 'Joào',
-    picture: 'https://avatars2.githubusercontent.com/u/1234?s=460&v=4',
-    status: 'active'
-  },
-  {
-    _id: '6',
-    email: 'joao@yopmail.com',
-    name: 'Joào',
-    picture: 'https://avatars2.githubusercontent.com/u/1234?s=460&v=4',
-    status: 'active'
-  },
-  {
-    _id: '7',
-    email: 'joao@yopmail.com',
-    name: 'Joào',
-    picture: 'https://avatars2.githubusercontent.com/u/1234?s=460&v=4',
-    status: 'active'
-  },
-  {
-    _id: '8',
-    email: 'joao@yopmail.com',
-    name: 'Joào',
-    picture: 'https://avatars2.githubusercontent.com/u/1234?s=460&v=4',
-    status: 'active'
-  },
-  {
-    _id: '9',
-    email: 'joao@yopmail.com',
-    name: 'Joào',
-    picture: 'https://avatars2.githubusercontent.com/u/1234?s=460&v=4',
-    status: 'active'
-  },
-  {
-    _id: '10',
-    email: 'joao@yopmail.com',
-    name: 'Joào',
-    picture: 'https://avatars2.githubusercontent.com/u/1234?s=460&v=4',
-    status: 'active'
-  },
-  {
-    _id: '11',
-    email: 'joao@yopmail.com',
-    name: 'Joào',
-    picture: 'https://avatars2.githubusercontent.com/u/1234?s=460&v=4',
-    status: 'active'
-  },
-  {
-    _id: '12',
-    email: 'joao@yopmail.com',
-    name: 'Joào',
-    picture: 'https://avatars2.githubusercontent.com/u/1234?s=460&v=4',
-    status: 'active'
-  },
-  {
-    _id: '13',
-    email: 'joao@yopmail.com',
-    name: 'Joào',
-    picture: 'https://avatars2.githubusercontent.com/u/1234?s=460&v=4',
-    status: 'active'
-  },
-  {
-    _id: '14',
-    email: 'joao@yopmail.com',
-    name: 'Joào',
-    picture: 'https://avatars2.githubusercontent.com/u/1234?s=460&v=4',
-    status: 'active'
-  },
-  {
-    _id: '15',
-    email: 'joao@yopmail.com',
-    name: 'Joào',
-    picture: 'https://avatars2.githubusercontent.com/u/1234?s=460&v=4',
-    status: 'active'
-  }
-]
+import usersMock from 'views/Users/mock'
 
 type IStateReponse = Omit<IUsersListResponse, 'data.docs'> | null
 
@@ -162,10 +55,20 @@ function Users () {
       )
     },
     {
+      Header: 'Nome',
+      accessor: 'name'
+    },
+    {
       Header: 'Email',
       accessor: 'email'
     },
-
+    {
+      Header: 'Tipo',
+      accessor: 'type',
+      Cell: ({ value, row }: { value: _userType, row: any }) => (
+        <p>{translateType[value]}</p>
+      )
+    },
     {
       Header: 'Status',
       accessor: 'status',
@@ -190,7 +93,7 @@ function Users () {
 
   async function getDocs (params: IUsersListRequestParams) {
     setLoadingDocs(true)
-    setDocs(mockedData)
+    setDocs(usersMock)
 
     const requestConfig: IUsersListRequest = {
       params

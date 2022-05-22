@@ -8,7 +8,7 @@ type ITableFilterale = {
 
 function TableFilterable ({ header, ...table }: ITableFilterale) {
   return (
-    <div className='flex flex-col p-3 border-2 border-light-text grow bg-background min-w-[700px]'>
+    <div className='flex flex-col p-3 border-2 border-light-text grow bg-background min-w-[700px] md:overflow-auto'>
       {header}
       <Table
         {...table}

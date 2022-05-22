@@ -42,6 +42,11 @@ function Table ({ data, columns, loading, ...pagination }: ITable) {
         <tbody
           {...getTableBodyProps()}
         >
+          {!rows.length && (
+            <div>
+              Nenhum registro encontrado
+            </div>
+          )}
           {rows.map(row => {
             prepareRow(row)
             const rowProps = row.getRowProps()
@@ -49,12 +54,12 @@ function Table ({ data, columns, loading, ...pagination }: ITable) {
               <tr
                 {...rowProps}
                 key={rowProps.key}
-                className='border-b-2 border-light-text'
+                className='border-b-2 border-light-text h-[75px]'
               >
                 {row.cells.map(cell => {
                   const cellProps = cell.getCellProps()
                   return (
-                    <td {...cellProps} key={cellProps.key}>
+                    <td {...cellProps} key={cellProps.key} className='whitespace-nowrap max-w-[500px] overflow-hidden overflow-ellipsis'>
                       {cell.render('Cell')}
                     </td>
                   )

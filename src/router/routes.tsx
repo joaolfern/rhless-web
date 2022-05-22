@@ -9,10 +9,10 @@ import Home from 'views/Home/Home'
 import Login from 'views/Login/Login'
 import Users from 'views/Users/Users'
 import Jobs from 'views/Jobs/Jobs'
-import Resumes from 'views/Resumes/Resumes'
+import Candidates from 'views/Candidates/Candidates'
 
 import jobsPageButton from 'assets/pageButton/jobs.png'
-import resumesPageButton from 'assets/pageButton/resumes.png'
+import candidatesPageButton from 'assets/pageButton/candidates.png'
 import usersPageButton from 'assets/pageButton/users.png'
 
 export type IRouteConfig = {
@@ -69,12 +69,12 @@ const routes: IRoutes = {
       inHome: true
 
     },
-    resumes: {
-      label: 'Currículos',
-      path: paths.auth.resumes,
-      element: <Resumes />,
+    candidates: {
+      label: 'Candidaturas',
+      path: paths.auth.candidates,
+      element: <Candidates />,
       icon: <HiDocumentText />,
-      pageButtonImage: resumesPageButton,
+      pageButtonImage: candidatesPageButton,
       inHome: true
     }
   }
