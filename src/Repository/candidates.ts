@@ -1,11 +1,11 @@
-import axios from 'axios'
+import api from 'config/api'
 import { ICandidatesListRequest, ICandidatesListResponse } from 'types/Candidates'
 import { Repository } from './'
 
 class CandidateRepository {
   static async index (config: ICandidatesListRequest): Promise<ICandidatesListResponse> {
     return Repository.handle(() =>
-      axios.get('/auth/candidates', config)
+      api.get('/auth/candidates', config)
     )
   }
 }

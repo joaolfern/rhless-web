@@ -7,7 +7,7 @@ const usersMock: IUser[] = [
     name: 'Joào',
     picture: 'https://avatars2.githubusercontent.com/u/1234?s=460&v=4',
     status: 'active',
-    type: 'headhunter'
+    type: 'admin'
   },
   {
     _id: '2',

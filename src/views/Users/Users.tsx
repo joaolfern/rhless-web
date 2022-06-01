@@ -102,11 +102,11 @@ function Users () {
     try {
       const reponse = await UserRepository.index(requestConfig)
       const { docs } = reponse.data
-      setResponse(response)
-      setDocs(prev => {
-        if (requestConfig.params.page === 1) return docs
-        return [...prev, ...docs]
-      })
+      // setResponse(response)
+      // setDocs(prev => {
+      //   if (requestConfig.params.page === 1) return docs
+      //   return [...prev, ...docs]
+      // })
 
       cachedParams.current = { ...cachedParams.current, ...params }
     } catch (err) {

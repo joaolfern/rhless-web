@@ -1,8 +1,7 @@
 import axios from 'axios'
-import { server } from 'config'
 
 const api = axios.create({
-  baseURL: server,
+  baseURL: process.env.REACT_APP_SERVER,
   timeout: 30000
 })
 
