@@ -7,12 +7,11 @@ import { IJob, IJobsListRequest, IJobsListRequestParams, IJobsListResponse, _job
 import { IRequestSearchable } from 'Repository/type'
 import { useForm } from 'react-hook-form'
 import Tag from 'components/Tag/Tag'
-import { translateStatus, translateType } from 'views/Jobs/constants'
+import { tagStatus, translateStatus, translateType } from 'views/Jobs/constants'
 import TagButton from 'components/TagButton/TagButton'
 // import JobForm from 'components/JobForm/JobForm'
 import { useModalContext } from 'hooks/useModalContext'
 import InputSm from 'components/Input/InputSm'
-import jobsMock from 'views/Jobs/mock'
 import { IUser } from 'types/Users'
 import JobForm from 'components/JobForm/JobForm'
 
@@ -73,7 +72,7 @@ function Jobs () {
       Cell: ({ value, row }: { value: _jobStatus, row: any }) => (
         <div className='grid gap-2 grid-cols-[100px_60px]'>
           <Tag
-            type='secondary'
+            type={tagStatus[value]}
           >
             {translateStatus[value]}
           </Tag>
@@ -90,7 +89,6 @@ function Jobs () {
 
   async function getDocs (params: IJobsListRequestParams) {
     setLoadingDocs(true)
-    setDocs(jobsMock)
 
     const requestConfig: IJobsListRequest = {
       params
@@ -100,10 +98,7 @@ function Jobs () {
       const reponse = await JobRepository.index(requestConfig)
       const { docs } = reponse.data
       setResponse(response)
-      setDocs(prev => {
-        if (requestConfig.params.page === 1) return docs
-        return [...prev, ...docs]
-      })
+      setDocs(docs)
 
       cachedParams.current = { ...cachedParams.current, ...params }
     } catch (err) {
@@ -122,8 +117,8 @@ function Jobs () {
     getDocs({ page, limit })
   }
 
-  function onSearch (values: IRequestSearchable) {
-    console.log('search', values)
+  function onSearch ({ search }: IRequestSearchable) {
+    getDocs({ page: 1, limit, search })
   }
 
   function createJob () {
@@ -169,6 +164,7 @@ function Jobs () {
               <InputSm
                 placeholder='Buscar'
                 forwardedRef={searchRef}
+                onKeyDown={e => e.key === 'Enter' && handleSearch(onSearch)}
                 {...searchRegister}
               />
             </form>

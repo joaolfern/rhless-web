@@ -4,11 +4,17 @@ import InputSm from 'components/Input/InputSm'
 import Modal from 'components/Modal/Modal'
 import useDialogContext from 'hooks/useDialogContext'
 import { useForm } from 'react-hook-form'
-import { IJob } from 'types/Jobs'
-import ButtonGhost from 'components/ButtonGhost/ButtonGhost'
+import { IJob, _jobStatus } from 'types/Jobs'
+import RadioGroup from 'components/RadioGroup/RadioGroup'
+import { JOB_TYPE_RESOURCE } from 'resources'
+import Textarea from 'components/Textarea/Textarea'
+import JobRepository from 'Repository/jobs'
+import useUser from 'hooks/useUser'
+import JobFormStatusButton from 'components/JobForm/JobFormStatusButton'
 
+export type IJobFormJob = Omit<Omit<Omit<IJob, '_id'>, 'author'>, 'status'> & { author: string }
 interface IJobForm {
-  job: Omit<Omit<Omit<IJob, '_id'>, 'author'>, 'status'>
+  job: IJobFormJob
 }
 
 interface IProps {
@@ -20,8 +26,8 @@ interface IProps {
 type _formMode = 'create' | 'update'
 
 function JobForm ({ onSubmitForm, onCancelForm, focusedJob }: IProps) {
-  const { handleSubmit, register, setValue, reset } = useForm<IJobForm>()
-
+  const { handleSubmit, register, setValue } = useForm<IJobForm>()
+  const { user } = useUser()
   const formMode: _formMode = useMemo(() => focusedJob?._id ? 'update' : 'create', [focusedJob?._id])
 
   const { ref: nameRef, ...name } = register('job.name')
@@ -31,14 +37,52 @@ function JobForm ({ onSubmitForm, onCancelForm, focusedJob }: IProps) {
   const { ref: descriptionRef, ...description } = register('job.description')
 
   const { dialog } = useDialogContext()
+  async function create (values: IJobForm) {
+    if (user?._id) values.job.author = user._id
 
-  function onSubmit (values: IJobForm) {
     try {
+      const response = await JobRepository.create(values.job)
+      dialog({ content: response.data })
+
       onSubmitForm()
-      dialog({ content: 'Cadastro realizado com sucesso' })
-      reset()
     } catch (err) {
       console.error(err)
+      if (typeof err === 'string') dialog({ content: err })
+    }
+  }
+
+  async function update (values: IJobForm) {
+    if (user?._id) values.job.author = user._id
+
+    try {
+      const response = await JobRepository.update({ data: values.job, id: focusedJob?._id as string })
+      dialog({ content: response.data })
+
+      onSubmitForm()
+    } catch (err) {
+      console.error(err)
+      if (typeof err === 'string') dialog({ content: err })
+    }
+  }
+
+  async function updateStatus (status: _jobStatus) {
+    try {
+      const response = await JobRepository.updateStatus({ data: { status: status }, id: focusedJob?._id as string })
+      dialog({ content: response.data })
+
+      onSubmitForm()
+    } catch (err) {
+      console.error(err)
+      if (typeof err === 'string') dialog({ content: err })
+    }
+  }
+
+  async function onSubmit (values: IJobForm) {
+    switch (formMode) {
+      case 'create':
+        return create(values)
+      case 'update':
+        return update(values)
     }
   }
 
@@ -50,7 +94,8 @@ function JobForm ({ onSubmitForm, onCancelForm, focusedJob }: IProps) {
           type: focusedJob.type,
           city: focusedJob.city,
           department: focusedJob.department,
-          description: focusedJob.description
+          description: focusedJob.description,
+          author: focusedJob.author._id
         }
       }
       setValue('job', formValue.job)
@@ -80,9 +125,10 @@ function JobForm ({ onSubmitForm, onCancelForm, focusedJob }: IProps) {
             <label htmlFor='type'>
               Contratação
             </label>
-            <InputSm
+            <RadioGroup
+              resources={JOB_TYPE_RESOURCE}
               forwardedRef={typeRef}
-              {...type}
+              inputProps={type}
             />
           </div>
           <div className='flex flex-col'>
@@ -105,21 +151,23 @@ function JobForm ({ onSubmitForm, onCancelForm, focusedJob }: IProps) {
           </div>
           <div className='flex flex-col'>
             <label htmlFor='description'>
-              Atribuições e Requisitos
+              Descrição
             </label>
-            <InputSm
+            <Textarea
               forwardedRef={descriptionRef}
               {...description}
             />
           </div>
         </div>
         <footer className='flex justify-between p-3 pl-6 pr-6 mt-auto border-t-2 border-light-text'>
-          {formMode === 'update' && (
-            <ButtonGhost className='pt-1 pb-1 pl-3 pr-3'>
-              Desativar
-            </ButtonGhost>
+          {formMode === 'update' && focusedJob?.status && (
+            <JobFormStatusButton
+
+              updateStatus={updateStatus}
+              status={focusedJob?.status}
+            />
           )}
-          <ButtonPrimary className='pt-1 pb-1 pl-3 pr-3 ml-auto'>
+          <ButtonPrimary className='px-3 py-1 ml-auto'>
             {formMode === 'create' ? 'Cadastrar' : 'Atualizar'}
           </ButtonPrimary>
         </footer>

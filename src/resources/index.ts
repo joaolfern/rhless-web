@@ -1,7 +1,8 @@
-import { ISelect, ITypedSelect } from 'components/Select/Select'
+import { ITypedSelect } from 'components/Select/Select'
 import { _userType } from 'types/Users'
+import { _jobTypes } from 'types/Jobs'
 
-const USER_TYPE_RESOURECE: ITypedSelect<_userType, string>[] = [
+export const USER_TYPE_RESOURECE: ITypedSelect<_userType, string>[] = [
   {
     label: 'Administrador',
     value: 'admin'
@@ -9,9 +10,16 @@ const USER_TYPE_RESOURECE: ITypedSelect<_userType, string>[] = [
   {
     label: 'Recrutador',
     value: 'headhunter'
-  },
+  }
 ]
 
-export {
-  USER_TYPE_RESOURECE
-}
+export const JOB_TYPE_RESOURCE: ITypedSelect<_jobTypes, string>[] = [
+  {
+    label: 'Estágio',
+    value: 'intern'
+  },
+  {
+    label: 'Integral',
+    value: 'fullTime'
+  }
+]

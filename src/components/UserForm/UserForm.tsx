@@ -10,6 +10,7 @@ import { IUserForm } from 'components/UserForm/types'
 import { USER_TYPE_RESOURECE } from 'resources'
 import { tagStatus, translateStatus } from 'views/Users/constants'
 import Tag from 'components/Tag/Tag'
+import RadioGroup from 'components/RadioGroup/RadioGroup'
 
 interface IProps {
   onSubmitForm: () => void
@@ -121,6 +122,7 @@ function UserForm ({ onSubmitForm, onCancelForm, focusedUser }: IProps) {
               className='box-content px-3 py-1 cursor-pointer'
               type={tagStatus[key as _userStatus]}
               onClick={() => updateStatus(key as _userStatus)}
+              onKeyDown={e => e.key === 'Enter' && updateStatus(key as _userStatus)}
             >
               {value}
             </Tag>
@@ -145,19 +147,11 @@ function UserForm ({ onSubmitForm, onCancelForm, focusedUser }: IProps) {
             <label>
               Tipo
             </label>
-            <div className='flex flex-wrap gap-6'>
-              {USER_TYPE_RESOURECE.map(({ label, value }) => (
-                <label key={label} className='flex items-center justify-center gap-1 text-lg cursor-pointer select-none'>
-                  <input
-                    value={value}
-                    type='radio'
-                    ref={typeRef}
-                    {...type}
-                  />
-                  {label}
-                </label>
-              ))}
-            </div>
+            <RadioGroup
+              resources={USER_TYPE_RESOURECE}
+              forwardedRef={typeRef}
+              inputProps={type}
+            />
           </div>
           <div className='flex flex-col'>
             <label htmlFor='name'>
@@ -217,6 +211,7 @@ function UserForm ({ onSubmitForm, onCancelForm, focusedUser }: IProps) {
               className='box-content px-3 py-1 cursor-pointer'
               type={tagStatus[focusedUser?.status]}
               onClick={() => showStatusUpdateDialog()}
+              onKeyDown={e => e.key === 'Enter' && showStatusUpdateDialog()}
             >
               {translateStatus[focusedUser?.status]}
             </Tag>
