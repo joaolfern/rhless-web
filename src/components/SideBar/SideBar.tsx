@@ -1,10 +1,24 @@
+import React from 'react'
 import SideBarItem from 'components/SideBar/SideBarItem'
 import { useAuthLayoutContext } from 'hooks'
-import React from 'react'
 import routes from 'router/routes'
+import { FiLogOut } from 'react-icons/fi'
+import useUser from 'hooks/useUser'
+import api from 'config/api'
+import { useNavigate } from 'react-router-dom'
 
 function SideBar () {
   const { isSidebarOpen } = useAuthLayoutContext()
+  const { clearUser } = useUser()
+
+  const navigate = useNavigate()
+
+  function logout () {
+    localStorage.removeItem('token')
+    clearUser()
+    api.defaults.headers.common['auth-token'] = ''
+    navigate('/')
+  }
 
   return (
     <aside
@@ -20,6 +34,13 @@ function SideBar () {
           routeConfig={routeConfig}
         />
       ))}
+      <button
+        className='flex items-center justify-center gap-2 p-3 mt-auto font-bold'
+        onClick={logout}
+        onKeyDown={e => e.key === 'Enter' && logout()}
+      >
+        <FiLogOut /> Sair
+      </button>
     </aside>
   )
 }

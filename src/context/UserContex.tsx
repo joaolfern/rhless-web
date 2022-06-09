@@ -4,11 +4,13 @@ import { IUser } from 'types/Users'
 type IUserContext = {
   user: IUser | null
   updateUser: (user: IUser) => void
+  clearUser: () => void
 }
 
 const initialState = {
   user: null,
-  updateUser: (user: IUser) => {}
+  updateUser: (user: IUser) => {},
+  clearUser: () => {}
 }
 
 const UserContext = createContext<IUserContext>(initialState)
@@ -20,9 +22,14 @@ function UserContextProvider ({ children }: { children: ReactNode }) {
     setUser(user)
   }
 
+  function clearUser () {
+    setUser(null)
+  }
+
   const value = {
     user,
-    updateUser
+    updateUser,
+    clearUser
   }
 
   return (

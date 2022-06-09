@@ -137,7 +137,7 @@ function Users () {
   }
 
   function onSubmitForm () {
-    getDocs({ ...cachedParams.current, page: 1 })
+    getDocs({ ...cachedParams.current })
     updateShowModal(false)
     setFocusedUser(null)
   }
