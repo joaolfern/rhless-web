@@ -14,6 +14,7 @@ import Candidates from 'views/Candidates/Candidates'
 import jobsPageButton from 'assets/pageButton/jobs.png'
 import candidatesPageButton from 'assets/pageButton/candidates.png'
 import usersPageButton from 'assets/pageButton/users.png'
+import { _userType } from 'types/Users'
 
 export type IRouteConfig = {
   path: string
@@ -24,9 +25,13 @@ export type IRouteConfig = {
   inHome?: true
 }
 
+export type IRouteConfigAuth = IRouteConfig & {
+  users: _userType[]
+}
+
 type IRoutes = {
   [key in 'auth' | 'unauth']: {
-    [key: string]: IRouteConfig
+    [key: string]: IRouteConfig | IRouteConfigAuth
   }
 }
 
@@ -50,7 +55,8 @@ const routes: IRoutes = {
       label: 'Início',
       path: paths.auth.home,
       element: <Home />,
-      icon: <TiHome />
+      icon: <TiHome />,
+      users: ['admin', 'headhunter', 'candidate']
     },
     users: {
       label: 'Usuários',
@@ -58,7 +64,8 @@ const routes: IRoutes = {
       element: <Users />,
       icon: <HiUser />,
       pageButtonImage: usersPageButton,
-      inHome: true
+      inHome: true,
+      users: ['admin']
     },
     jobs: {
       label: 'Vagas',
@@ -66,8 +73,8 @@ const routes: IRoutes = {
       element: <Jobs />,
       icon: <MdWork />,
       pageButtonImage: jobsPageButton,
-      inHome: true
-
+      inHome: true,
+      users: ['admin', 'headhunter']
     },
     candidates: {
       label: 'Candidaturas',
@@ -75,7 +82,8 @@ const routes: IRoutes = {
       element: <Candidates />,
       icon: <HiDocumentText />,
       pageButtonImage: candidatesPageButton,
-      inHome: true
+      inHome: true,
+      users: ['admin', 'headhunter']
     }
   }
 }
