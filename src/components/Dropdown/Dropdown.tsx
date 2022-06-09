@@ -1,5 +1,5 @@
-import { Menu } from '@headlessui/react'
 import React, { ReactNode } from 'react'
+import { Menu } from '@headlessui/react'
 
 interface IProps {
   options: {
@@ -15,10 +15,10 @@ function Dropdown ({ options, children }: IProps) {
       <Menu.Button>
         {children}
       </Menu.Button>
-      <Menu.Items>
+      <Menu.Items className='p-3 bg-white border-2 border-black rounded'>
         {options.map(({ label, onClick }) => (
           <Menu.Item key={label}>
-            {({ active }) => (
+            {({ active }: { active: boolean }) => (
               <button
                 className={`${active && 'bg-blue-500'}`}
                 onClick={onClick}

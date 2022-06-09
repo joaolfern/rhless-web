@@ -160,7 +160,7 @@ function Jobs () {
         getPage={getNextPage}
         hasNextPage={!!response?.data.hasNextPage}
         page={response?.data.page || 1}
-        pageTotal={response?.data.pageTotal || 1}
+        pageTotal={response?.data.totalPages || 1}
         header={
           <div className='flex justify-between p-1'>
             <form

@@ -30,7 +30,7 @@ function RequestAccount ({ onSubmitForm, onCancelForm }: IProps) {
       dialog({ content: 'Solicitação realizada com sucesso! Você receberá uma atualização por email.' })
       reset()
     } catch (err) {
-      dialog({ content: 'Ocorreu um problema, tente novamente.' })
+      if (typeof err === 'string') dialog({ content: err })
       console.error(err)
     }
   }

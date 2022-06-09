@@ -4,7 +4,6 @@ import SideBar from 'components/SideBar/SideBar'
 import { AuthLayoutContextProvider } from 'context/AuthLayoutContext'
 import { Route, Routes } from 'react-router-dom'
 import routes from 'router/routes'
-import { UserContextProvider } from 'context/UserContex'
 
 const routesMemo = Object.values(routes.auth)
 function AuthLayout () {

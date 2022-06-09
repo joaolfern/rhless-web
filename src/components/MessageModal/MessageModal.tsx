@@ -56,7 +56,7 @@ function MessageModal () {
                     Confirmar
                   </ButtonPrimary>
                 </div>
-              ) : (
+              ) : typeof content === 'string' && (
                 <ButtonPrimary
                   className='pt-1 pb-1 pl-3 pr-3'
                   onClick={onClose}

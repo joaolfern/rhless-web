@@ -7,14 +7,13 @@ import { IUser, IUsersListRequest, IUsersListRequestParams, IUsersListResponse, 
 import { IRequestSearchable } from 'Repository/type'
 import { useForm } from 'react-hook-form'
 import Tag from 'components/Tag/Tag'
-import { translateStatus, translateType } from 'views/Users/constants'
+import { tagStatus, translateStatus, translateType } from 'views/Users/constants'
 import TagButton from 'components/TagButton/TagButton'
 import UserForm from 'components/UserForm/UserForm'
 import { useModalContext } from 'hooks/useModalContext'
 import InputSm from 'components/Input/InputSm'
-import usersMock from 'views/Users/mock'
 
-type IStateReponse = Omit<IUsersListResponse, 'data.docs'> | null
+type IStateReponse = IUsersListResponse | null
 
 const limit = 10
 
@@ -76,7 +75,7 @@ function Users () {
       Cell: ({ value, row }: { value: _userStatus, row: any }) => (
         <div className='grid gap-2 grid-cols-[100px_60px]'>
           <Tag
-            type='secondary'
+            type={tagStatus[value]}
           >
             {translateStatus[value]}
           </Tag>
@@ -93,20 +92,19 @@ function Users () {
 
   async function getDocs (params: IUsersListRequestParams) {
     setLoadingDocs(true)
-    setDocs(usersMock)
 
     const requestConfig: IUsersListRequest = {
       params
     }
 
     try {
-      const reponse = await UserRepository.index(requestConfig)
-      const { docs } = reponse.data
-      // setResponse(response)
-      // setDocs(prev => {
-      //   if (requestConfig.params.page === 1) return docs
-      //   return [...prev, ...docs]
-      // })
+      const response = await UserRepository.index(requestConfig)
+      setResponse(response)
+      const { docs } = response.data || {}
+      setDocs(prev => {
+        if (requestConfig.params.page === 1) return docs
+        return [...prev, ...docs]
+      })
 
       cachedParams.current = { ...cachedParams.current, ...params }
     } catch (err) {
@@ -163,7 +161,7 @@ function Users () {
         getPage={getNextPage}
         hasNextPage={!!response?.data.hasNextPage}
         page={response?.data.page || 1}
-        pageTotal={response?.data.pageTotal || 1}
+        pageTotal={response?.data.totalPages || 1}
         header={
           <div className='flex justify-between p-1'>
             <form

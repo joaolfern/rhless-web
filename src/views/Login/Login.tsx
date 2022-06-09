@@ -36,7 +36,6 @@ function Login () {
       if (typeof e === 'string') dialog({ content: String(e) })
       console.log(e)
     }
-    api.defaults.headers.common['auth-token'] = 'value'
   }
 
   const { ref: emailRef, ...emailRegister } = register('email')
@@ -73,6 +72,7 @@ function Login () {
             className='w-full'
             placeholder='Informe sua senha'
             forwardedRef={passwordRef}
+            type='password'
             {...passwordRegister}
           />
           <ButtonPrimary
