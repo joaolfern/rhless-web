@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import AppHeader from 'components/AppHeader/AppHeader'
 import SideBar from 'components/SideBar/SideBar'
 import { AuthLayoutContextProvider } from 'context/AuthLayoutContext'
@@ -7,9 +7,6 @@ import routes from 'router/routes'
 
 const routesMemo = Object.values(routes.auth)
 function AuthLayout () {
-  useEffect(() => {
-    console.log('aaaa')
-  }, [])
   return (
     <div className='flex flex-col h-full max-h-full font-nunito'>
       <AuthLayoutContextProvider>

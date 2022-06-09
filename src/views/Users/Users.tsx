@@ -123,8 +123,8 @@ function Users () {
     getDocs({ page, limit })
   }
 
-  function onSearch (values: IRequestSearchable) {
-    console.log('search', values)
+  function onSearch ({ search }: IRequestSearchable) {
+    getDocs({ page: 1, limit, search })
   }
 
   function createUser () {
@@ -170,6 +170,7 @@ function Users () {
               <InputSm
                 placeholder='Buscar'
                 forwardedRef={searchRef}
+                onKeyDown={e => e.key === 'Enter' && handleSearch(onSearch)}
                 {...searchRegister}
               />
             </form>
