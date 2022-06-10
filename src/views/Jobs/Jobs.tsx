@@ -14,6 +14,7 @@ import { useModalContext } from 'hooks/useModalContext'
 import InputSm from 'components/Input/InputSm'
 import { IUser } from 'types/Users'
 import JobForm from 'components/JobForm/JobForm'
+import useUser from 'hooks/useUser'
 
 type IStateReponse = Omit<IJobsListResponse, 'data.docs'> | null
 
@@ -34,6 +35,8 @@ function Jobs () {
 
   const { handleSubmit: handleSearch, register } = useForm<IRequestSearchable>()
   const { ref: searchRef, ...searchRegister } = register('search')
+
+  const { user } = useUser()
 
   function editJob (job: IJob) {
     setFocusedJob(job)
@@ -76,12 +79,14 @@ function Jobs () {
           >
             {translateStatus[value]}
           </Tag>
-          <TagButton
-            type='ghost'
-            onClick={() => editJob(row.original)}
-          >
-            Editar
-          </TagButton>
+          {user?.type === 'headhunter' && (
+            <TagButton
+              type='ghost'
+              onClick={() => editJob(row.original)}
+            >
+              Editar
+            </TagButton>
+          )}
         </div>
       )
     }
@@ -169,9 +174,11 @@ function Jobs () {
               />
             </form>
 
-            <ButtonPrimary onClick={createJob} className='p-2'>
-              Cadastrar Vaga
-            </ButtonPrimary>
+            {user?.type === 'headhunter' && (
+              <ButtonPrimary onClick={createJob} className='p-2'>
+                Cadastrar Vaga
+              </ButtonPrimary>
+            )}
           </div>
         }
       />

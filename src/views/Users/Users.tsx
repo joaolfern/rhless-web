@@ -47,6 +47,7 @@ function Users () {
       Cell: (cell) => (
         <div className='flex gap-2'>
           <img
+            loading='lazy'
             className='box-content w-10 h-10 p-2 rounded-full min-w-10 min-h-10 md:w-14 md:h-14 md:min-w-14 md:min-h-14'
             src={cell.value}
           />

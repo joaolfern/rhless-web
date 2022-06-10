@@ -1,3 +1,4 @@
+import usePersistState from 'hooks/usePersistState'
 import React, { createContext, ReactNode } from 'react'
 import { IUser } from 'types/Users'
 
@@ -16,14 +17,14 @@ const initialState = {
 const UserContext = createContext<IUserContext>(initialState)
 
 function UserContextProvider ({ children }: { children: ReactNode }) {
-  const [user, setUser] = React.useState<IUser | null>(null)
+  const { state: user, setState: setUser } = usePersistState<IUser | null>('user', null)
 
   function updateUser (user: IUser) {
-    setUser(user)
+    setUser?.(user)
   }
 
   function clearUser () {
-    setUser(null)
+    setUser?.(null)
   }
 
   const value = {

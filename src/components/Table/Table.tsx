@@ -42,7 +42,7 @@ function Table ({ data, columns, loading, ...pagination }: ITable) {
         <tbody
           {...getTableBodyProps()}
         >
-          {!rows.length && (
+          {!rows.length && !loading && (
             <div>
               Nenhum registro encontrado
             </div>
