@@ -1,36 +1,46 @@
+import api from 'config/api'
 import usePersistState from 'hooks/usePersistState'
-import React, { createContext, ReactNode } from 'react'
+import React, { createContext, ReactNode, useEffect } from 'react'
 import { IUser } from 'types/Users'
 
+type ISession = { user: IUser, token: string }
+
 type IUserContext = {
-  user: IUser | null
-  updateUser: (user: IUser) => void
-  clearUser: () => void
+  session: ISession | null
+  saveSession: ({ user, token }: ISession) => void
+  clearSession: () => void
 }
 
 const initialState = {
-  user: null,
-  updateUser: (user: IUser) => {},
-  clearUser: () => {}
+  session: null,
+  saveSession: ({ user, token }: ISession) => {},
+  clearSession: () => {}
 }
 
 const UserContext = createContext<IUserContext>(initialState)
 
 function UserContextProvider ({ children }: { children: ReactNode }) {
-  const { state: user, setState: setUser } = usePersistState<IUser | null>('user', null)
+  const { state: session, setState: setSession } = usePersistState<ISession | null>('session', null)
 
-  function updateUser (user: IUser) {
-    setUser?.(user)
+  function saveSession (session: ISession) {
+    setSession?.(session)
   }
 
-  function clearUser () {
-    setUser?.(null)
+  useEffect(() => {
+    if (session?.token) api.defaults.headers.common['auth-token'] = session.token
+    if (session?.user?.type) api.defaults.headers.common['user-type'] = session.user.type
+  }, [session?.token, session?.user?.type])
+
+  function clearSession () {
+    setSession?.(null)
+    api.defaults.headers.common['auth-token'] = ''
+    api.defaults.headers.common['user-type'] = ''
   }
 
   const value = {
-    user,
-    updateUser,
-    clearUser
+    session,
+    saveSession,
+    clearSession
   }
 
   return (

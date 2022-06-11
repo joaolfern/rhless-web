@@ -27,7 +27,7 @@ type _formMode = 'create' | 'update'
 
 function JobForm ({ onSubmitForm, onCancelForm, focusedJob }: IProps) {
   const { handleSubmit, register, setValue } = useForm<IJobForm>()
-  const { user } = useUser()
+  const { session } = useUser()
   const formMode: _formMode = useMemo(() => focusedJob?._id ? 'update' : 'create', [focusedJob?._id])
 
   const { ref: nameRef, ...name } = register('job.name')
@@ -38,7 +38,7 @@ function JobForm ({ onSubmitForm, onCancelForm, focusedJob }: IProps) {
 
   const { dialog } = useDialogContext()
   async function create (values: IJobForm) {
-    if (user?._id) values.job.author = user._id
+    if (session?.user?._id) values.job.author = session?.user._id
 
     try {
       const response = await JobRepository.create(values.job)
@@ -52,7 +52,7 @@ function JobForm ({ onSubmitForm, onCancelForm, focusedJob }: IProps) {
   }
 
   async function update (values: IJobForm) {
-    if (user?._id) values.job.author = user._id
+    if (session?.user?._id) values.job.author = session?.user._id
 
     try {
       const response = await JobRepository.update({ data: values.job, id: focusedJob?._id as string })

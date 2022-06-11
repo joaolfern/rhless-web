@@ -7,9 +7,7 @@ import { BiMenu } from 'react-icons/bi'
 import { useAuthLayoutContext } from 'hooks'
 
 function AppHeader () {
-  const { user } = useUser()
-
-  console.log(user)
+  const { session } = useUser()
 
   const { toggleSidebar, isSidebarOpen } = useAuthLayoutContext()
 
@@ -20,9 +18,9 @@ function AppHeader () {
         src={logo}
       />
       <div className='flex items-center gap-4 mr-auto md:ml-auto md:mr-0'>
-        <p className='hidden md:inline'>{user?.name}</p>
+        <p className='hidden md:inline'>{session?.user?.name}</p>
         <Avatar
-          src={user?.picture}
+          src={session?.user?.picture}
           className='w-10 h-10 md:w-16 md:h-16'
         />
       </div>

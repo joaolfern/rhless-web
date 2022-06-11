@@ -36,7 +36,7 @@ function Jobs () {
   const { handleSubmit: handleSearch, register } = useForm<IRequestSearchable>()
   const { ref: searchRef, ...searchRegister } = register('search')
 
-  const { user } = useUser()
+  const { session } = useUser()
 
   function editJob (job: IJob) {
     setFocusedJob(job)
@@ -79,7 +79,7 @@ function Jobs () {
           >
             {translateStatus[value]}
           </Tag>
-          {user?.type === 'headhunter' && (
+          {session?.user?.type === 'headhunter' && (
             <TagButton
               type='ghost'
               onClick={() => editJob(row.original)}
@@ -174,7 +174,7 @@ function Jobs () {
               />
             </form>
 
-            {user?.type === 'headhunter' && (
+            {session?.user?.type === 'headhunter' && (
               <ButtonPrimary onClick={createJob} className='p-2'>
                 Cadastrar Vaga
               </ButtonPrimary>

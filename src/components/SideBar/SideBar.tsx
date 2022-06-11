@@ -9,14 +9,12 @@ import { useNavigate } from 'react-router-dom'
 
 function SideBar () {
   const { isSidebarOpen } = useAuthLayoutContext()
-  const { clearUser, user } = useUser()
+  const { clearSession, session } = useUser()
   const navigate = useNavigate()
 
   function logout () {
     localStorage.removeItem('token')
-    clearUser()
-    api.defaults.headers.common['auth-token'] = ''
-    api.defaults.headers.common['user-type'] = ''
+    clearSession()
     navigate('/')
   }
 
@@ -29,7 +27,7 @@ function SideBar () {
       `}
     >
       {Object.entries(routes.auth)
-        .filter(([routeName, routeConfig]) => user?.type && (routeConfig as IRouteConfigAuth).users.includes(user.type))
+        .filter(([routeName, routeConfig]) => session?.user?.type && (routeConfig as IRouteConfigAuth).users.includes(session?.user.type))
         .map(([routeName, routeConfig]) => (
           <SideBarItem
             key={routeConfig.path}

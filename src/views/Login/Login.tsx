@@ -10,7 +10,6 @@ import { ILoginForm } from 'views/Login/type'
 import { useNavigate } from 'react-router-dom'
 import RequestAccount from 'components/RequestAccountModal/RequestAccountModal'
 import { useModalContext } from 'hooks/useModalContext'
-import api from 'config/api'
 import useDialogContext from 'hooks/useDialogContext'
 import UserRepository from 'Repository/users'
 import useUser from 'hooks/useUser'
@@ -20,7 +19,7 @@ function Login () {
   const navigate = useNavigate()
   const [showRequestAccountModal, setShowRequestAccountModal] = useState(false)
   const { updateShowModal } = useModalContext()
-  const { updateUser } = useUser()
+  const { saveSession } = useUser()
   const { dialog } = useDialogContext()
 
   async function onSubmit (values: ILoginForm) {
@@ -28,10 +27,7 @@ function Login () {
       const response = await UserRepository.login(values)
       const { token, user } = response.data
 
-      updateUser(user)
-      api.defaults.headers.common['auth-token'] = token
-      api.defaults.headers.common['user-type'] = user.type
-
+      saveSession({ token, user })
       navigate(`auth${paths.auth.home}`)
     } catch (e) {
       if (typeof e === 'string') dialog({ content: String(e) })
