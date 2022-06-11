@@ -30,6 +30,7 @@ function Login () {
 
       updateUser(user)
       api.defaults.headers.common['auth-token'] = token
+      api.defaults.headers.common['user-type'] = user.type
 
       navigate(`auth${paths.auth.home}`)
     } catch (e) {

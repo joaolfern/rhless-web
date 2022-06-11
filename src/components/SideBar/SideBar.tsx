@@ -16,6 +16,7 @@ function SideBar () {
     localStorage.removeItem('token')
     clearUser()
     api.defaults.headers.common['auth-token'] = ''
+    api.defaults.headers.common['user-type'] = ''
     navigate('/')
   }
 
