@@ -3,12 +3,15 @@ import React, { useEffect, useRef, useState } from 'react'
 import JobRepository from 'Repository/jobs'
 import { IJob, IJobsListRequest, IJobsListRequestParams } from 'types/Jobs'
 import logo from 'assets/logo.jpg'
+import swipe from 'assets/swipe.png'
 import AccountFeedLabel from 'components/AccountFeedLabel/AccountFeedLabel'
 import { useForm } from 'react-hook-form'
 import { IRequestSearchable, IResponsePaginatedState } from 'Repository/type'
 import InputSm from 'components/Input/InputSm'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import useDialogContext from 'hooks/useDialogContext'
+import browserStorage from 'store'
+import { isTouchDevice } from 'utils'
 
 const limit = 10
 
@@ -22,6 +25,25 @@ function Feed () {
 
   const { handleSubmit: handleSearch, register } = useForm<IRequestSearchable>()
   const { ref: searchRef, ...searchRegister } = register('search')
+
+  const [showSwipeTip, setShowSwipeTip] = useState(false)
+
+  useEffect(() => {
+    function showSwipeTip () {
+      if (!browserStorage.get('swipe_tip')) {
+        setShowSwipeTip(true)
+        console.log('🎈🎈🎈🎈🎈', browserStorage.get('swipe_tip'))
+      }
+    }
+
+    let timer: any
+
+    if (!browserStorage.get('swipe_tip') && isTouchDevice()) timer = setTimeout(showSwipeTip, 3000)
+
+    return () => {
+      if (timer) clearTimeout(timer)
+    }
+  }, [])
 
   async function getDocs (params: IJobsListRequestParams) {
     const requestConfig: IJobsListRequest = {
@@ -67,7 +89,7 @@ function Feed () {
       </div>
 
       <img
-        className='w-[200px]'
+        className='w-[200px] md:w-[300px]'
         src={logo}
       />
       <div className='flex flex-col w-full grow'>
@@ -109,7 +131,20 @@ function Feed () {
           />
         ))}
       </InfiniteScroll>
-      <div >
+      <div
+        onClick={() => setShowSwipeTip(false)}
+        onKeyDown={() => setShowSwipeTip(false)}
+        className={`fixed inset-0 flex flex-col items-center justify-center transition-opacity duration-200 text-white ${showSwipeTip ? '' : 'pointer-events-none'}  ${showSwipeTip ? 'opacity-1' : 'opacity-0'}`}
+      >
+        <div className='flex flex-col items-center justify-center gap-6 mt-10'>
+          <img
+            src={swipe}
+            placeholder='Arraste para direita'
+            className='z-10 w-6'
+          />
+          <p className='z-10 font-semibold'>Arraste para direita para se candidatar</p>
+        </div>
+        <div className='absolute inset-0 w-full h-full bg-black opacity-50' />
       </div>
     </div>
   )

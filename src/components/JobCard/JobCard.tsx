@@ -9,6 +9,8 @@ import { useNavigate } from 'react-router-dom'
 import paths from 'router/paths'
 import Button from 'components/Button/Button'
 import { isTouchDevice } from 'utils'
+import browserStorage from 'store'
+
 interface IJobCard {
   job: IJob & { hasCandidature?: true }
 }
@@ -19,9 +21,12 @@ function JobCard ({ job }: IJobCard) {
 
   const [transitionTranslate, setTransitionTranslate] = useState(false)
 
+  function setSwipeTipAsSeen () {
+    browserStorage.set('swipe_tip', true)
+  }
+
   async function createCandidature () {
     if (!session?.user._id || !job._id) return
-
     const data = {
       user: session?.user._id,
       job: job._id
@@ -35,6 +40,8 @@ function JobCard ({ job }: IJobCard) {
   }
 
   const createToastfulCandidature = useCallback(() => {
+    setSwipeTipAsSeen()
+
     if (!session?.user._id) {
       navigate(paths.unauth.userLogin)
       toast('Você precisar entrar para se candidatar')
@@ -54,6 +61,7 @@ function JobCard ({ job }: IJobCard) {
       setTransitionTranslate(true)
       if (swipedDistance > 0.5) {
         if (!session?.user._id) {
+          setSwipeTipAsSeen()
           navigate(paths.unauth.userLogin)
           toast('Você precisar entrar para se candidatar')
           return
