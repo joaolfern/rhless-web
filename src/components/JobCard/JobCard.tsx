@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { IJob } from 'types/Jobs'
 import dayjs from 'dayjs'
 import useSwipeDistance from 'hooks/useSwipeDistance'
@@ -37,13 +37,18 @@ function JobCard ({ job }: IJobCard) {
     setLoadingCandidature(true)
     try {
       await CandidateRepository.create(data)
-      navigator.vibrate(200)
     } catch (err) {
       console.error(err)
     } finally {
       setLoadingCandidature(false)
     }
   }
+
+  const createToastfulCandidature = useCallback(() => toast.promise(createCandidature(), {
+    loading: 'Candidatando-se...',
+    success: 'Candidatura realizada com sucesso!',
+    error: 'Erro'
+  }), [session?.user._id])
 
   const { handlers, swipedDistance } = useSwipeDistance({
     direction: 'Right',
@@ -55,12 +60,7 @@ function JobCard ({ job }: IJobCard) {
           toast('Você precisar entrar para se candidatar')
           return
         }
-
-        toast.promise(createCandidature(), {
-          loading: 'Candidatando-se...',
-          success: 'Candidatura realizada com sucesso!',
-          error: 'Erro'
-        })
+        createToastfulCandidature()
       }
     },
     onSwiping: eventData => {
@@ -91,8 +91,8 @@ function JobCard ({ job }: IJobCard) {
               <Button
                 className={`transition-colors duration-75 px-[0.125rem] py-[0.125rem] w-32 ${job.hasCandidature ? ' bg-primary ' : 'text-primary border-primary border-[1px] '}`}
                 style={{ ...(!job.hasCandidature ? { color: '#008405' } : {}) }}
-                onClick={() => createCandidature()}
-                onKeyDown={e => e.key === 'Enter' && createCandidature()}
+                onClick={() => createToastfulCandidature()}
+                onKeyDown={e => e.key === 'Enter' && createToastfulCandidature()}
               >
                 <span className='flex items-center justify-center gap-[6px] whitespace-nowrap'>
                   {loadingCandidature && <AiOutlineLoading className='font-bold animate-spin ' />}
