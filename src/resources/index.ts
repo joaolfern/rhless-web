@@ -10,6 +10,10 @@ export const USER_TYPE_RESOURECE: ITypedSelect<_userType, string>[] = [
   {
     label: 'Recrutador',
     value: 'headhunter'
+  },
+  {
+    label: 'Candidato',
+    value: 'candidate'
   }
 ]
 

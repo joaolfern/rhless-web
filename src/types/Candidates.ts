@@ -8,9 +8,8 @@ export type ICandidate = {
   _id: string
   job: IJob
   user: IUser
-  author: IUser
-  status: _candidateStatus
   resume: string
+  status: _candidateStatus
 }
 
 export type ICandidatesListRequestParams = IRequestPaginated & IRequestSearchable

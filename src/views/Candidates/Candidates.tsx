@@ -3,14 +3,11 @@ import TableFilterable from 'components/TableFilterable/TableFilterable'
 import { Column } from 'react-table'
 import CandidateRepository from 'Repository/candidates'
 import { ICandidate, ICandidatesListRequest, ICandidatesListRequestParams, ICandidatesListResponse, _candidateStatus } from 'types/Candidates'
-import { IRequestSearchable } from 'Repository/type'
-import { useForm } from 'react-hook-form'
 import Tag from 'components/Tag/Tag'
-import { translateStatus } from 'views/Candidates/constants'
-import InputSm from 'components/Input/InputSm'
-import candidatesMock from 'views/Candidates/mock'
-import { BiEdit } from 'react-icons/bi'
-import Dropdown from 'components/Dropdown/Dropdown'
+import { tagStatus, translateStatus } from 'views/Candidates/constants'
+import { HiDocumentText } from 'react-icons/hi'
+import TagButton from 'components/TagButton/TagButton'
+import useDialogContext from 'hooks/useDialogContext'
 
 type IStateReponse = Omit<ICandidatesListResponse, 'data.docs'> | null
 
@@ -24,49 +21,10 @@ function Candidates () {
   const scrollRef = useRef<HTMLDivElement>(null)
   const cachedParams = useRef<ICandidatesListRequestParams>({ page: 1, limit })
 
-  const { handleSubmit: handleSearch, register } = useForm<IRequestSearchable>()
-  const { ref: searchRef, ...searchRegister } = register('search')
-
-  const columns: Column<ICandidate & { 'user.name': string, 'author.name': string, 'job.name': string, 'job.city': string }>[] = useMemo(() => [
-    {
-      Header: 'Candidato',
-      accessor: 'user.name'
-    },
-    {
-      Header: 'Autor',
-      accessor: 'author.name'
-    },
-    {
-      Header: 'Vaga',
-      accessor: 'job.name'
-    },
-    {
-      Header: 'Localização',
-      accessor: 'job.city'
-    },
-    {
-      Header: 'Status',
-      accessor: 'status',
-      Cell: ({ value, row }: { value: _candidateStatus, row: any }) => (
-        <div className='grid gap-2 grid-cols-[100px_60px]'>
-          <Tag
-            type='secondary'
-          >
-            {translateStatus[value]}
-          </Tag>
-          <BiEdit />
-          {/* <Dropdown options={[
-            { label: 'Aprovar', onClick: () => {} }
-          ]}>
-          </Dropdown> */}
-        </div>
-      )
-    }
-  ], [])
+  const { dialog } = useDialogContext()
 
   async function getDocs (params: ICandidatesListRequestParams) {
     setLoadingDocs(true)
-    setDocs(candidatesMock)
 
     const requestConfig: ICandidatesListRequest = {
       params
@@ -89,6 +47,82 @@ function Candidates () {
     }
   }
 
+  async function updateStatus ({ candidate, status }: { candidate: ICandidate, status: _candidateStatus }) {
+    try {
+      const response = await CandidateRepository.updateStatus({ data: { status: status, job: candidate.job._id }, id: candidate._id })
+      getDocs({ ...cachedParams.current })
+
+      dialog({ content: response.data })
+    } catch (err) {
+      console.error(err)
+      if (typeof err === 'string') dialog({ content: err })
+    }
+  }
+
+  function showStatusUpdateDialog (candidate: ICandidate) {
+    dialog({
+      content: (
+        <div className='flex flex-col w-full gap-3'>
+          <h3 className='ml-auto'><b>Atualizar status:</b></h3>
+          {Object.entries(translateStatus).map(([key, value]) => (
+            <Tag
+              key={key}
+              className='box-content px-3 py-1 cursor-pointer'
+              type={tagStatus[key as _candidateStatus]}
+              onClick={() => updateStatus({ candidate, status: key as _candidateStatus })}
+              onKeyDown={e => e.key === 'Enter' && updateStatus({ candidate, status: key as _candidateStatus })}
+            >
+              {value}
+            </Tag>
+          ))}
+        </div>
+      )
+    })
+  }
+
+  const columns: Column<ICandidate & { 'user.name': string, 'job.name': string, 'resume': string }>[] = useMemo(() => [
+    {
+      Header: 'Vaga',
+      accessor: 'job.name'
+    },
+    {
+      Header: 'Candidato',
+      accessor: 'user.name'
+    },
+    {
+      Header: 'Currículo',
+      accessor: 'resume',
+      Cell: ({ value, row }: { value: string, row: any }) => (
+        <a
+          href={value}
+          className='text-xl cursor-pointer text-secondary'
+          target='_blank' rel="noreferrer"
+        >
+          <HiDocumentText />
+        </a >
+      )
+    },
+    {
+      Header: 'Status',
+      accessor: 'status',
+      Cell: ({ value, row }: { value: _candidateStatus, row: any }) => (
+        <div className='grid gap-2 grid-cols-[100px_60px]'>
+          <Tag
+            type={tagStatus[value]}
+          >
+            {translateStatus[value]}
+          </Tag>
+          <TagButton
+            type='ghost'
+            onClick={() => showStatusUpdateDialog(row.original)}
+          >
+            Editar
+          </TagButton>
+        </div>
+      )
+    }
+  ], [])
+
   useEffect(() => {
     getDocs(cachedParams.current)
   }, [])
@@ -96,10 +130,6 @@ function Candidates () {
   function getNextPage (page: number) {
     scrollRef.current?.scrollTo({ top: 0 })
     getDocs({ page, limit })
-  }
-
-  function onSearch (values: IRequestSearchable) {
-    console.log('search', values)
   }
 
   return (
@@ -117,7 +147,7 @@ function Candidates () {
         pageTotal={response?.data.totalPages || 1}
         header={
           <div className='flex justify-between p-1'>
-            <form
+            {/* <form
               onSubmit={handleSearch(onSearch)}
             >
               <InputSm
@@ -125,7 +155,7 @@ function Candidates () {
                 forwardedRef={searchRef}
                 {...searchRegister}
               />
-            </form>
+            </form> */}
           </div>
         }
       />

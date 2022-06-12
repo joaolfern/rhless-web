@@ -21,7 +21,7 @@ function AppHeader () {
         <p className='hidden md:inline'>{session?.user?.name}</p>
         <Avatar
           src={session?.user?.picture}
-          className='w-10 h-10 md:w-16 md:h-16'
+          className='w-[2.5rem] h-[2.5rem] md:w-16 md:h-16'
         />
       </div>
       <button
