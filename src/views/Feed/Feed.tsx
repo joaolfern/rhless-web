@@ -32,7 +32,6 @@ function Feed () {
     function showSwipeTip () {
       if (!browserStorage.get('swipe_tip')) {
         setShowSwipeTip(true)
-        console.log('🎈🎈🎈🎈🎈', browserStorage.get('swipe_tip'))
       }
     }
 
