@@ -2,19 +2,18 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import TableFilterable from 'components/TableFilterable/TableFilterable'
 import { Column } from 'react-table'
 import CandidateRepository from 'Repository/candidates'
-import { ICandidate, ICandidatesListRequest, ICandidatesListRequestParams, ICandidatesListResponse, _candidateStatus } from 'types/Candidates'
+import { ICandidate, ICandidatesListRequest, ICandidatesListRequestParams, _candidateStatus } from 'types/Candidates'
 import Tag from 'components/Tag/Tag'
 import { tagStatus, translateStatus } from 'views/Candidates/constants'
 import { HiDocumentText } from 'react-icons/hi'
 import TagButton from 'components/TagButton/TagButton'
 import useDialogContext from 'hooks/useDialogContext'
-
-type IStateReponse = Omit<ICandidatesListResponse, 'data.docs'> | null
+import { IResponsePaginatedState } from 'Repository/type'
 
 const limit = 10
 
 function Candidates () {
-  const [response, setResponse] = useState<IStateReponse>(null)
+  const [response, setResponse] = useState<IResponsePaginatedState<ICandidate> | null>(null)
   const [docs, setDocs] = useState<ICandidate[]>([])
   const [loadingDocs, setLoadingDocs] = useState(false)
 
@@ -32,12 +31,9 @@ function Candidates () {
 
     try {
       const reponse = await CandidateRepository.index(requestConfig)
-      const { docs } = reponse.data
-      setResponse(response)
-      setDocs(prev => {
-        if (requestConfig.params.page === 1) return docs
-        return [...prev, ...docs]
-      })
+      const { docs, ...rest } = reponse.data
+      setResponse(rest as IResponsePaginatedState<ICandidate> | null)
+      setDocs(docs)
 
       cachedParams.current = { ...cachedParams.current, ...params }
     } catch (err) {
@@ -80,7 +76,7 @@ function Candidates () {
     })
   }
 
-  const columns: Column<ICandidate & { 'user.name': string, 'job.name': string, 'resume': string }>[] = useMemo(() => [
+  const columns: Column<ICandidate & { 'user.name': string, 'job.name': string, 'user.resume': string }>[] = useMemo(() => [
     {
       Header: 'Vaga',
       accessor: 'job.name'
@@ -91,7 +87,7 @@ function Candidates () {
     },
     {
       Header: 'Currículo',
-      accessor: 'resume',
+      accessor: 'user.resume',
       Cell: ({ value, row }: { value: string, row: any }) => (
         <a
           href={value}
@@ -142,9 +138,9 @@ function Candidates () {
         columns={columns}
         loading={loadingDocs}
         getPage={getNextPage}
-        hasNextPage={!!response?.data.hasNextPage}
-        page={response?.data.page || 1}
-        pageTotal={response?.data.totalPages || 1}
+        hasNextPage={!!response?.hasNextPage}
+        page={response?.page || 1}
+        pageTotal={response?.totalPages || 1}
         header={
           <div className='flex justify-between p-1'>
             {/* <form

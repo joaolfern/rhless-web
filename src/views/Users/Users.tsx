@@ -3,8 +3,8 @@ import ButtonPrimary from 'components/Button/Variants/ButtonPrimary'
 import TableFilterable from 'components/TableFilterable/TableFilterable'
 import { Column } from 'react-table'
 import UserRepository from 'Repository/users'
-import { IUser, IUsersListRequest, IUsersListRequestParams, IUsersListResponse, _userStatus, _userType } from 'types/Users'
-import { IRequestSearchable } from 'Repository/type'
+import { IUser, IUsersListRequest, IUsersListRequestParams, _userStatus, _userType } from 'types/Users'
+import { IRequestSearchable, IResponsePaginatedState } from 'Repository/type'
 import { useForm } from 'react-hook-form'
 import Tag from 'components/Tag/Tag'
 import { tagStatus, translateStatus, translateType } from 'views/Users/constants'
@@ -13,12 +13,10 @@ import UserForm from 'components/UserForm/UserForm'
 import { useModalContext } from 'hooks/useModalContext'
 import InputSm from 'components/Input/InputSm'
 
-type IStateReponse = IUsersListResponse | null
-
 const limit = 10
 
 function Users () {
-  const [response, setResponse] = useState<IStateReponse>(null)
+  const [response, setResponse] = useState<IResponsePaginatedState<IUser> | null>(null)
   const [docs, setDocs] = useState<IUser[]>([])
   const [loadingDocs, setLoadingDocs] = useState(false)
 
@@ -100,8 +98,8 @@ function Users () {
 
     try {
       const response = await UserRepository.index(requestConfig)
-      setResponse(response)
-      const { docs } = response.data || {}
+      const { docs, ...rest } = response.data || {}
+      setResponse(rest as IResponsePaginatedState<IUser>)
       setDocs(docs)
 
       cachedParams.current = { ...cachedParams.current, ...params }
@@ -157,9 +155,9 @@ function Users () {
         columns={columns}
         loading={loadingDocs}
         getPage={getNextPage}
-        hasNextPage={!!response?.data.hasNextPage}
-        page={response?.data.page || 1}
-        pageTotal={response?.data.totalPages || 1}
+        hasNextPage={!!response?.hasNextPage}
+        page={response?.page || 1}
+        pageTotal={response?.totalPages || 1}
         header={
           <div className='flex justify-between p-1'>
             <form

@@ -1,8 +1,9 @@
 const paths = {
   unauth: {
     feed: '/*',
-    login: '/login',
-    restorePassword: '/restore-password'
+    login: '/authenticate',
+    restorePassword: '/restore-password',
+    userLogin: '/login'
   },
   auth: {
     home: '/home',

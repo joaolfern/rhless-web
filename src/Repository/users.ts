@@ -1,4 +1,5 @@
 import { AxiosResponse } from 'axios'
+import { ICreateAccountForm } from 'components/CreateAccountForm/type'
 import { IRequestAccountForm } from 'components/RequestAccountModal/type'
 import { IUserFormUser } from 'components/UserForm/types'
 import api from 'config/api'
@@ -28,6 +29,12 @@ class UserRepository {
   static async create (data: IUserFormUser): Promise<AxiosResponse<string>> {
     return Repository.handle(() =>
       api.post('/auth/users', data)
+    )
+  }
+
+  static async register (data: ICreateAccountForm): Promise<AxiosResponse<string>> {
+    return Repository.handle(() =>
+      api.post('/unauth/register', data)
     )
   }
 

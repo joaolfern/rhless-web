@@ -3,8 +3,8 @@ import ButtonPrimary from 'components/Button/Variants/ButtonPrimary'
 import TableFilterable from 'components/TableFilterable/TableFilterable'
 import { Column } from 'react-table'
 import JobRepository from 'Repository/jobs'
-import { IJob, IJobsListRequest, IJobsListRequestParams, IJobsListResponse, _jobStatus, _jobTypes } from 'types/Jobs'
-import { IRequestSearchable } from 'Repository/type'
+import { IJob, IJobsListRequest, IJobsListRequestParams, _jobStatus, _jobTypes } from 'types/Jobs'
+import { IRequestSearchable, IResponsePaginatedState } from 'Repository/type'
 import { useForm } from 'react-hook-form'
 import Tag from 'components/Tag/Tag'
 import { tagStatus, translateStatus, translateType } from 'views/Jobs/constants'
@@ -16,12 +16,10 @@ import { IUser } from 'types/Users'
 import JobForm from 'components/JobForm/JobForm'
 import useUser from 'hooks/useUser'
 
-type IStateReponse = Omit<IJobsListResponse, 'data.docs'> | null
-
 const limit = 10
 
 function Jobs () {
-  const [response, setResponse] = useState<IStateReponse>(null)
+  const [response, setResponse] = useState<IResponsePaginatedState<IJob> | null>(null)
   const [docs, setDocs] = useState<IJob[]>([])
   const [loadingDocs, setLoadingDocs] = useState(false)
 
@@ -101,8 +99,8 @@ function Jobs () {
 
     try {
       const reponse = await JobRepository.index(requestConfig)
-      const { docs } = reponse.data
-      setResponse(response)
+      const { docs, ...restResponse } = reponse.data
+      setResponse(restResponse as IResponsePaginatedState<IJob>)
       setDocs(docs)
 
       cachedParams.current = { ...cachedParams.current, ...params }
@@ -158,9 +156,9 @@ function Jobs () {
         columns={columns}
         loading={loadingDocs}
         getPage={getNextPage}
-        hasNextPage={!!response?.data.hasNextPage}
-        page={response?.data.page || 1}
-        pageTotal={response?.data.totalPages || 1}
+        hasNextPage={!!response?.hasNextPage}
+        page={response?.page || 1}
+        pageTotal={response?.totalPages || 1}
         header={
           <div className='flex justify-between p-1'>
             <form

@@ -16,6 +16,7 @@ import candidatesPageButton from 'assets/pageButton/candidates.png'
 import usersPageButton from 'assets/pageButton/users.png'
 import { _userType } from 'types/Users'
 import Feed from 'views/Feed/Feed'
+import UserLogin from 'views/UserLogin/UserLogin'
 
 export type IRouteConfig = {
   path: string
@@ -54,6 +55,12 @@ const routes: IRoutes = {
       path: paths.unauth.restorePassword,
       element: <Login />,
       label: 'Restaurar senha',
+      icon: <TiHome />
+    },
+    userLogin: {
+      path: paths.unauth.userLogin,
+      element: <UserLogin />,
+      label: 'Entrar',
       icon: <TiHome />
     }
   },

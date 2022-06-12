@@ -2,33 +2,46 @@ import React, { useState } from 'react'
 import { IJob } from 'types/Jobs'
 import dayjs from 'dayjs'
 import useSwipeDistance from 'hooks/useSwipeDistance'
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 import useUser from 'hooks/useUser'
 import CandidateRepository from 'Repository/candidates'
-
+import { useNavigate } from 'react-router-dom'
+import paths from 'router/paths'
+import Button from 'components/Button/Button'
+import { isTouchDevice } from 'utils'
+import { AiOutlineLoading } from 'react-icons/ai'
 interface IJobCard {
-  job: IJob
+  job: IJob & { hasCandidature?: true }
 }
-
-const notify = () => toast('Here is your toast.')
 
 function JobCard ({ job }: IJobCard) {
   const { session } = useUser()
+  const navigate = useNavigate()
 
   const [transitionTranslate, setTransitionTranslate] = useState(false)
+  const [loadingCandidature, setLoadingCandidature] = useState(false)
 
   async function createCandidature () {
+    if (!session?.user._id) {
+      navigate(paths.unauth.userLogin)
+      toast('Você precisar entrar para se candidatar')
+      return
+    }
+
     if (!session?.user._id || !job._id) return
 
     const data = {
       user: session?.user._id,
       job: job._id
     }
-
+    setLoadingCandidature(true)
     try {
       await CandidateRepository.create(data)
+      navigator.vibrate(200)
     } catch (err) {
       console.error(err)
+    } finally {
+      setLoadingCandidature(false)
     }
   }
 
@@ -37,6 +50,12 @@ function JobCard ({ job }: IJobCard) {
     onSwiped: eventData => {
       setTransitionTranslate(true)
       if (swipedDistance > 0.5) {
+        if (!session?.user._id) {
+          navigate(paths.unauth.userLogin)
+          toast('Você precisar entrar para se candidatar')
+          return
+        }
+
         toast.promise(createCandidature(), {
           loading: 'Candidatando-se...',
           success: 'Candidatura realizada com sucesso!',
@@ -54,29 +73,42 @@ function JobCard ({ job }: IJobCard) {
       className='border-t-[1px] border-gray-200 p-3  relative w-full overflow-hidden'
       {...handlers}
     >
-      <Toaster />
       <div
-        className={`flex flex-col ${transitionTranslate ? 'transition-transform duration-150' : ''}`}
+        className={`flex flex-col justify-center ${transitionTranslate ? 'transition-transform duration-150' : ''}`}
         style={{
           transform: `translateX(${swipedDistance * 1.3 * 100}%)`
         }}
-        onClick={() => {
-          console.log('sim')
-          notify()
-        }}
       >
-        <p className='font-semibold text-primary'>
-          {job.name}
+        <p className='text-sm'>
+          {job.city}
         </p>
+        <div className='flex items-center justify-between'>
+          <p className='font-semibold text-primary'>
+            {job.name}
+          </p>
+          {!isTouchDevice() && (
+            <div>
+              <Button
+                className={`transition-colors duration-75 px-[0.125rem] py-[0.125rem] w-32 ${job.hasCandidature ? ' bg-primary ' : 'text-primary border-primary border-[1px] '}`}
+                style={{ ...(!job.hasCandidature ? { color: '#008405' } : {}) }}
+                onClick={() => createCandidature()}
+                onKeyDown={e => e.key === 'Enter' && createCandidature()}
+              >
+                <span className='flex items-center justify-center gap-[6px] whitespace-nowrap'>
+                  {loadingCandidature && <AiOutlineLoading className='font-bold animate-spin ' />}
+                  <span className='text-sm'>{job.hasCandidature ? 'Candidatado' : 'Candidatar-se'}</span>
+                </span>
+              </Button>
+            </div>
+          )}
+        </div>
         <p className='font-semibold'>
           {job.author.name}
         </p>
         <p>
           {job.department}
         </p>
-        <p className='text-sm'>
-          {job.city}
-        </p>
+
         <p className='ml-auto text-sm text-light-text'>
           {dayjs(job.createdAt).fromNow()}
         </p>

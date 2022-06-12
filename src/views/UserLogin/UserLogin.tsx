@@ -8,7 +8,7 @@ import Link from 'components/Link/Link'
 import { useForm } from 'react-hook-form'
 import { ILoginForm } from 'views/Login/type'
 import { useNavigate } from 'react-router-dom'
-import RequestAccount from 'components/RequestAccountModal/RequestAccountModal'
+import CreateAccountForm from 'components/CreateAccountForm/CreateAccountForm'
 import { useModalContext } from 'hooks/useModalContext'
 import useDialogContext from 'hooks/useDialogContext'
 import UserRepository from 'Repository/users'
@@ -18,7 +18,7 @@ import RestorePassword from 'components/RestorePassword/RestorePassword'
 function UserLogin () {
   const { handleSubmit, register } = useForm<ILoginForm>()
   const navigate = useNavigate()
-  const [showRequestAccountModal, setShowRequestAccountModal] = useState(false)
+  const [showCreateAccountModal, setShowCreateAccountModal] = useState(false)
   const { updateShowModal } = useModalContext()
   const { saveSession } = useUser()
   const { dialog } = useDialogContext()
@@ -29,7 +29,7 @@ function UserLogin () {
       const { token, user } = response.data
 
       saveSession({ token, user })
-      navigate(`/auth${paths.auth.home}`)
+      navigate(paths.unauth.feed)
     } catch (e) {
       if (typeof e === 'string') dialog({ content: String(e) })
       console.log(e)
@@ -39,17 +39,17 @@ function UserLogin () {
   const { ref: emailRef, ...emailRegister } = register('email')
   const { ref: passwordRef, ...passwordRegister } = register('password')
 
-  function updateShowRequestAccountModal (value: boolean) {
+  function updateShowCreateAccountModal (value: boolean) {
     updateShowModal(value)
-    setShowRequestAccountModal(value)
+    setShowCreateAccountModal(value)
   }
 
   return (
     <div className='flex flex-col h-full '>
-      {showRequestAccountModal && (
-        <RequestAccount
-          onCancelForm={() => updateShowRequestAccountModal(false)}
-          onSubmitForm={() => updateShowRequestAccountModal(false)}
+      {showCreateAccountModal && (
+        <CreateAccountForm
+          onCancelForm={() => updateShowCreateAccountModal(false)}
+          onSubmitForm={() => updateShowCreateAccountModal(false)}
         />
       )}
       <form
@@ -82,20 +82,28 @@ function UserLogin () {
           <ButtonSecondary
             type='button'
             className='w-full p-3'
-            onClick={() => updateShowRequestAccountModal(true)}
-            onKeyDown={(e) => e.key === 'Enter' && updateShowRequestAccountModal(true)}
+            onClick={() => updateShowCreateAccountModal(true)}
+            onKeyDown={(e) => e.key === 'Enter' && updateShowCreateAccountModal(true)}
           >
-            Solicitar Cadastro
+            Cadastrar-se
           </ButtonSecondary>
         </div>
         <RestorePassword />
       </form>
-      <Link
-        className='m-5 ml-auto font-semibold text-secondary'
-        to={paths.unauth.userLogin}
-      >
-        Entrar como candidato
-      </Link>
+      <div className='flex flex-wrap justify-between'>
+        <Link
+          className='m-5 font-semibold text-secondary'
+          to={paths.unauth.feed}
+        >
+          Vagas
+        </Link>
+        <Link
+          className='m-5 font-semibold text-primary'
+          to={paths.unauth.login}
+        >
+          Entrar como recrutador
+        </Link>
+      </div>
     </div>
   )
 }

@@ -6,6 +6,7 @@ import { FiLogOut } from 'react-icons/fi'
 import useUser from 'hooks/useUser'
 import api from 'config/api'
 import { useNavigate } from 'react-router-dom'
+import paths from 'router/paths'
 
 function SideBar () {
   const { isSidebarOpen } = useAuthLayoutContext()
@@ -15,7 +16,7 @@ function SideBar () {
   function logout () {
     localStorage.removeItem('token')
     clearSession()
-    navigate('/')
+    navigate(paths.unauth.login)
   }
 
   return (

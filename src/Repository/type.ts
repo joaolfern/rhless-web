@@ -15,7 +15,7 @@ export type IRequestSearchable = {
 
 export type IResponse<T> = AxiosResponse<T>
 
-export type IResponsePaginated<T> = IResponse<{
+export type IResponsePaginatedState<T> = {
   totalDocs: number
   offset: number
   limit: number
@@ -27,4 +27,6 @@ export type IResponsePaginated<T> = IResponse<{
   prevPage: number | null
   nextPage: number | null
   docs: T[]
-}>
+}
+
+export type IResponsePaginated<T> = IResponse<IResponsePaginatedState<T>>

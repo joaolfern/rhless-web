@@ -26,7 +26,7 @@ interface IProps {
 type _formMode = 'create' | 'update'
 
 function JobForm ({ onSubmitForm, onCancelForm, focusedJob }: IProps) {
-  const { handleSubmit, register, setValue } = useForm<IJobForm>()
+  const { handleSubmit, register, setValue, reset } = useForm<IJobForm>()
   const { session } = useUser()
   const formMode: _formMode = useMemo(() => focusedJob?._id ? 'update' : 'create', [focusedJob?._id])
 
@@ -43,7 +43,7 @@ function JobForm ({ onSubmitForm, onCancelForm, focusedJob }: IProps) {
     try {
       const response = await JobRepository.create(values.job)
       dialog({ content: response.data })
-
+      reset()
       onSubmitForm()
     } catch (err) {
       console.error(err)
