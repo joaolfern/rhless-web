@@ -1,6 +1,6 @@
 import AuthLayout from 'layout/AuthLayout'
 import UnauthLayout from 'layout/UnauthLayout'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 
 function index () {

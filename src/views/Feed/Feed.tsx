@@ -8,22 +8,26 @@ import { useForm } from 'react-hook-form'
 import { IRequestSearchable, IResponsePaginatedState } from 'Repository/type'
 import InputSm from 'components/Input/InputSm'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import useDialogContext from 'hooks/useDialogContext'
 
 const limit = 10
 
 function Feed () {
+  const { dialog } = useDialogContext()
+
+  const [loadingJobs, setLoadingJobs] = useState(false)
   const [response, setResponse] = useState<IResponsePaginatedState<IJob> | null>(null)
   const [docs, setDocs] = useState<IJob[]>([])
+  const cachedParams = useRef<IJobsListRequestParams>({ page: 1, limit })
+
   const { handleSubmit: handleSearch, register } = useForm<IRequestSearchable>()
   const { ref: searchRef, ...searchRegister } = register('search')
-
-  const cachedParams = useRef<IJobsListRequestParams>({ page: 1, limit })
 
   async function getDocs (params: IJobsListRequestParams) {
     const requestConfig: IJobsListRequest = {
       params
     }
-
+    setLoadingJobs(true)
     try {
       const reponse = await JobRepository.feed(requestConfig)
       const { docs } = reponse.data
@@ -36,6 +40,9 @@ function Feed () {
       cachedParams.current = { ...cachedParams.current, ...params }
     } catch (err) {
       console.error(err)
+      if (typeof err === 'string') dialog({ content: err })
+    } finally {
+      setLoadingJobs(false)
     }
   }
 
@@ -80,9 +87,13 @@ function Feed () {
         </div>
 
         <p className='px-3 ml-auto text-light-text'>
-          {response?.totalDocs} vagas encontradas
+          {response?.totalDocs || 0} vagas encontradas
         </p>
       </div>
+
+      {!docs?.length && loadingJobs && (
+        'Buscando...'
+      )}
 
       <InfiniteScroll
         className='md:border-x-[1px] border-b-[1px] border-gray-200 w-full'

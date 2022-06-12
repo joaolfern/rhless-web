@@ -9,7 +9,6 @@ import { useNavigate } from 'react-router-dom'
 import paths from 'router/paths'
 import Button from 'components/Button/Button'
 import { isTouchDevice } from 'utils'
-import { AiOutlineLoading } from 'react-icons/ai'
 interface IJobCard {
   job: IJob & { hasCandidature?: true }
 }
@@ -19,36 +18,35 @@ function JobCard ({ job }: IJobCard) {
   const navigate = useNavigate()
 
   const [transitionTranslate, setTransitionTranslate] = useState(false)
-  const [loadingCandidature, setLoadingCandidature] = useState(false)
 
   async function createCandidature () {
-    if (!session?.user._id) {
-      navigate(paths.unauth.userLogin)
-      toast('Você precisar entrar para se candidatar')
-      return
-    }
-
     if (!session?.user._id || !job._id) return
 
     const data = {
       user: session?.user._id,
       job: job._id
     }
-    setLoadingCandidature(true)
     try {
       await CandidateRepository.create(data)
     } catch (err) {
       console.error(err)
-    } finally {
-      setLoadingCandidature(false)
+      throw err
     }
   }
 
-  const createToastfulCandidature = useCallback(() => toast.promise(createCandidature(), {
-    loading: 'Candidatando-se...',
-    success: 'Candidatura realizada com sucesso!',
-    error: 'Erro'
-  }), [session?.user._id])
+  const createToastfulCandidature = useCallback(() => {
+    if (!session?.user._id) {
+      navigate(paths.unauth.userLogin)
+      toast('Você precisar entrar para se candidatar')
+      return
+    }
+
+    toast.promise(createCandidature(), {
+      loading: 'Candidatando-se...',
+      success: 'Candidatura realizada com sucesso!',
+      error: value => value
+    })
+  }, [session?.user._id])
 
   const { handlers, swipedDistance } = useSwipeDistance({
     direction: 'Right',
@@ -95,7 +93,6 @@ function JobCard ({ job }: IJobCard) {
                 onKeyDown={e => e.key === 'Enter' && createToastfulCandidature()}
               >
                 <span className='flex items-center justify-center gap-[6px] whitespace-nowrap'>
-                  {loadingCandidature && <AiOutlineLoading className='font-bold animate-spin ' />}
                   <span className='text-sm'>{job.hasCandidature ? 'Candidatado' : 'Candidatar-se'}</span>
                 </span>
               </Button>

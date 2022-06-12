@@ -17,11 +17,11 @@ import RestorePassword from 'components/RestorePassword/RestorePassword'
 
 function UserLogin () {
   const { handleSubmit, register } = useForm<ILoginForm>()
-  const navigate = useNavigate()
   const [showCreateAccountModal, setShowCreateAccountModal] = useState(false)
   const { updateShowModal } = useModalContext()
   const { saveSession } = useUser()
   const { dialog } = useDialogContext()
+  const navigate = useNavigate()
 
   async function onSubmit (values: ILoginForm) {
     try {
@@ -29,7 +29,12 @@ function UserLogin () {
       const { token, user } = response.data
 
       saveSession({ token, user })
-      navigate(paths.unauth.feed)
+
+      const initialPath = user.type === 'candidate'
+        ? paths.unauth.feed
+        : `/auth${paths.auth.home}`
+
+      navigate(initialPath)
     } catch (e) {
       if (typeof e === 'string') dialog({ content: String(e) })
       console.log(e)

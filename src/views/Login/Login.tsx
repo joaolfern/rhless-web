@@ -29,7 +29,12 @@ function UserLogin () {
       const { token, user } = response.data
 
       saveSession({ token, user })
-      navigate(`/auth${paths.auth.home}`)
+
+      const initialPath = user.type === 'candidate'
+        ? paths.unauth.feed
+        : `/auth${paths.auth.home}`
+
+      navigate(initialPath)
     } catch (e) {
       if (typeof e === 'string') dialog({ content: String(e) })
       console.log(e)
