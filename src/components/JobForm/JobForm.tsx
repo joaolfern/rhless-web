@@ -90,6 +90,7 @@ function JobForm ({ onSubmitForm, onCancelForm, focusedJob }: IProps) {
     if (focusedJob?._id) {
       const formValue: IJobForm = {
         job: {
+          createdAt: focusedJob.createdAt,
           name: focusedJob.name,
           type: focusedJob.type,
           city: focusedJob.city,

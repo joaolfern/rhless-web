@@ -15,6 +15,7 @@ import jobsPageButton from 'assets/pageButton/jobs.png'
 import candidatesPageButton from 'assets/pageButton/candidates.png'
 import usersPageButton from 'assets/pageButton/users.png'
 import { _userType } from 'types/Users'
+import Feed from 'views/Feed/Feed'
 
 export type IRouteConfig = {
   path: string
@@ -37,6 +38,12 @@ type IRoutes = {
 
 const routes: IRoutes = {
   unauth: {
+    feed: {
+      path: paths.unauth.feed,
+      element: <Feed />,
+      label: 'Entrar',
+      icon: <TiHome />
+    },
     login: {
       path: paths.unauth.login,
       element: <Login />,

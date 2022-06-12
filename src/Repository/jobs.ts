@@ -11,6 +11,12 @@ class JobRepository {
     )
   }
 
+  static async feed (config: IJobsListRequest): Promise<IJobsListResponse> {
+    return Repository.handle(() =>
+      api.get('/unauth/feed', config)
+    )
+  }
+
   static async create (data: IJobFormJob): Promise<AxiosResponse<string>> {
     return Repository.handle(() =>
       api.post('/auth/jobs', data)

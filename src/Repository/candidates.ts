@@ -21,6 +21,12 @@ class CandidateRepository {
       api.patch(`/auth/candidates/${id}/reprove`, data)
     )
   }
+
+  static async create (data: { job: string, user: string }): Promise<ICandidatesListResponse> {
+    return Repository.handle(() =>
+      api.post('/auth/candidates', data)
+    )
+  }
 }
 
 export default CandidateRepository

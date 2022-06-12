@@ -13,6 +13,7 @@ export type IJob = {
   description: string
   status: _jobStatus
   author: IUser
+  createdAt: Date
 }
 
 export type IJobsListRequestParams = IRequestPaginated & IRequestSearchable

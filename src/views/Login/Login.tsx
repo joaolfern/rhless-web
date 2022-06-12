@@ -28,7 +28,7 @@ function Login () {
       const { token, user } = response.data
 
       saveSession({ token, user })
-      navigate(`auth${paths.auth.home}`)
+      navigate(`/auth${paths.auth.home}`)
     } catch (e) {
       if (typeof e === 'string') dialog({ content: String(e) })
       console.log(e)
